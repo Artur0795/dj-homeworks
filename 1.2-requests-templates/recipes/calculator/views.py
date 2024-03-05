@@ -31,37 +31,18 @@ DATA = {
 # }
 
 
-def omlet(request):
-    servings = request.GET.get('servings')
-    if servings:
-        res = DATA['omlet'].copy()
-        for key in res:
-            res[key] *= int(servings)
-        context = {'recipe': res}
+def cook(request, recipe_name):
+    if recipe_name in DATA.keys():
+        servings = request.GET.get('servings', 1)
+        data = {}
+        for ingredient in DATA[recipe_name]:
+            data[ingredient] = round(DATA[recipe_name][ingredient] * int(servings), 2)
+
+        context = {
+            'recipe': data
+        }
+
     else:
-        context = {'recipe': DATA['omlet']}
-    return render(request, 'calculator/index.html', context)
+        context = {}
 
-
-def pasta(request):
-    servings = request.GET.get('servings')
-    if servings:
-        res = DATA['pasta'].copy()
-        for key in res:
-            res[key] *= int(servings)
-        context = {'recipe': res}
-    else:
-        context = {'recipe': DATA['pasta']}
-    return render(request, 'calculator/index.html', context)
-
-
-def buter(request):
-    servings = request.GET.get('servings')
-    if servings:
-        res = DATA['buter'].copy()
-        for key in res:
-            res[key] *= int(servings)
-        context = {'recipe': res}
-    else:
-        context = {'recipe': DATA['buter']}
     return render(request, 'calculator/index.html', context)
